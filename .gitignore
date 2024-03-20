@@ -1,4 +1,5 @@
 .env
-node_modules
-build
+.env.test
+/node_modules
+/build
 .DS_Store

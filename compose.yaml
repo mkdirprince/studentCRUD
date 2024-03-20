@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   app:
     build:
@@ -7,7 +9,11 @@ services:
     depends_on:
       - prisma
     environment:
-      DATABASE_URL: postgres://postgres:secret@pg_db:5432/postgres
+      DATABASE_URL: postgres://postgres:${PG_PASSWORD}@pg_db:5432/postgres
+    volumes:
+      - ./src:/usr/src/app/src
+    env_file:
+      - .env
 
   prisma:
     image: prismagraphql/prisma:1.34
@@ -22,7 +28,7 @@ services:
             host: pg_db
             port: 5432
             user: postgres
-            password: secret
+            password: ${PG_PASSWORD}
             database: pg_db
             migrations: true
             rawAccess: true
