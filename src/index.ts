@@ -1,13 +1,22 @@
+import config from "./utils/config";
 import express from "express";
-const app = express();
+import cors from "cors";
+import healthcheck from "./api/healthCheck";
+import morgan from "morgan";
+import { unknownEndpoint } from "./middleware/unknowEndpoint";
+import v1Api from "./api/v1/index";
+
+export const app = express();
 app.use(express.json());
+app.use(cors());
 
-app.get("/ping", (_req, res) => {
-  res.send("pong");
-});
+app.use(morgan("dev"));
 
-const PORT = 3003;
+app.use("/healthcheck", healthcheck);
+app.use("/api", v1Api);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.use(unknownEndpoint);
+
+app.listen(config.PORT, () => {
+  console.log(`Server running on port ${config.PORT}`);
 });
